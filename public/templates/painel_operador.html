@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- ===== BOTÃO GRANDE "ESCANEAR CLIENTE" ===== -->
+<div class="d-grid mb-4">
+    <a href="{{ url_for('ler_qrcode') }}" 
+       class="btn btn-primary btn-lg py-4 shadow-sm d-flex align-items-center justify-content-center gap-3"
+       style="font-size: 1.5rem; font-weight: 600;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0v-3Zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5ZM1 12.5a.5.5 0 0 1 1 0V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3Zm14 0a.5.5 0 0 1-1 0V15h-2.5a.5.5 0 0 1 0-1h3a.5.5 0 0 1 .5.5v-3Z"/>
+            <path d="M4 4h2v2H4V4Zm0 3h2v2H4V7Zm0 3h2v2H4v-2Zm3-6h2v2H7V4Zm0 3h2v2H7V7Zm0 3h2v2H7v-2Zm3-6h2v2h-2V4Zm0 3h2v2h-2V7Zm0 3h2v2h-2v-2Z"/>
+        </svg>
+        Escanear Cliente
+    </a>
+</div>
+
+<!-- ===== KPIs DO DIA ===== -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body text-center">
+                <div class="small">Vendas hoje</div>
+                <div class="fs-3 fw-bold">{{ kpis.vendas_hoje }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-white bg-warning h-100">
+            <div class="card-body text-center">
+                <div class="small">Parcelas vencem hoje</div>
+                <div class="fs-3 fw-bold">{{ kpis.parcelas_hoje }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-white bg-danger h-100">
+            <div class="card-body text-center">
+                <div class="small">Atrasadas</div>
+                <div class="fs-3 fw-bold">{{ kpis.parcelas_atrasadas }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body text-center">
+                <div class="small">A receber hoje</div>
+                <div class="fs-5 fw-bold">R$ {{ '%.2f'|format(kpis.total_receber_hoje) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== AÇÕES RÁPIDAS ===== -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-4">
+        <a href="{{ url_for('nova_venda') }}" class="btn btn-outline-primary w-100 py-3">
+            ➕ Nova venda manual
+        </a>
+    </div>
+    <div class="col-6 col-md-4">
+        <a href="{{ url_for('parcelas') }}" class="btn btn-outline-secondary w-100 py-3">
+            💰 Baixar parcelas
+        </a>
+    </div>
+    <div class="col-12 col-md-4">
+        <a href="{{ url_for('clientes') }}" class="btn btn-outline-secondary w-100 py-3">
+            👥 Clientes
+        </a>
+    </div>
+</div>
+
+<!-- ===== ÚLTIMAS VENDAS ===== -->
+<div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">Últimas vendas</div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-sm table-striped mb-0">
+                <thead>
+                    <tr><th>#</th><th>Cliente</th><th>Valor</th><th>Parcelas</th><th>Data</th></tr>
+                </thead>
+                <tbody>
+                    {% for v in ultimas_vendas %}
+                    <tr>
+                        <td>{{ v.id }}</td>
+                        <td>{{ v.cliente.nome }}</td>
+                        <td>R$ {{ '%.2f'|format(v.valor_total) }}</td>
+                        <td>{{ v.num_parcelas }}x</td>
+                        <td>{{ v.data_venda.strftime('%d/%m/%Y %H:%M') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-center py-3">Nenhuma venda ainda.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Dashboard</h1>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5>Total a Receber</h5>
+                <h3>R$ {{ '%.2f'|format(total_receber) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-body">
+                <h5>Total Atrasado</h5>
+                <h3>R$ {{ '%.2f'|format(total_atrasado) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5>Pontos Acumulados (todos clientes)</h5>
+                <h3>{{ total_pontos }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

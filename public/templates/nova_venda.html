@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Nova Venda a Prazo</h1>
+
+{% if cliente_pre %}
+<div class="alert alert-success d-flex justify-content-between align-items-center">
+    <div>
+        <strong>Cliente identificado pelo QR:</strong> {{ cliente_pre.nome }}
+        <span class="badge bg-dark ms-2">{{ cliente_pre.pontos }} pts</span>
+    </div>
+    <a href="{{ url_for('nova_venda') }}" class="btn btn-sm btn-outline-secondary">Trocar cliente</a>
+</div>
+{% endif %}
+
+<form method="POST" action="{{ url_for('nova_venda') }}">
+    <div class="mb-3">
+        <label for="cliente_id" class="form-label">Cliente *</label>
+        <select class="form-select" id="cliente_id" name="cliente_id" required>
+            <option value="">Selecione...</option>
+            {% for c in clientes %}
+            <option value="{{ c.id }}"
+                {% if cliente_pre and cliente_pre.id == c.id %}selected{% endif %}>
+                {{ c.nome }} (ID: {{ c.id }}) — {{ c.pontos }} pts
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="valor_total" class="form-label">Valor Total (R$) *</label>
+            <input type="number" step="0.01" min="0.01" class="form-control"
+                   id="valor_total" name="valor_total" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="num_parcelas" class="form-label">Parcelas *</label>
+            <input type="number" min="1" class="form-control"
+                   id="num_parcelas" name="num_parcelas" value="1" required>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="primeiro_vencimento" class="form-label">1º Vencimento *</label>
+            <input type="date" class="form-control"
+                   id="primeiro_vencimento" name="primeiro_vencimento" required>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="forma_pagamento" class="form-label">Forma de Pagamento *</label>
+        <select class="form-select" id="forma_pagamento" name="forma_pagamento" required>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="pix">PIX</option>
+            <option value="cartao_credito">Cartão de Crédito</option>
+            <option value="cartao_debito">Cartão de Débito</option>
+            <option value="boleto">Boleto</option>
+            <option value="crediario">Crediário da Loja</option>
+        </select>
+    </div>
+
+    <div class="alert alert-info" id="resumo-parcelas"></div>
+
+    <button type="submit" class="btn btn-success">Criar Venda</button>
+    <a href="{{ url_for('parcelas') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+
+<script>
+// Resumo dinâmico das parcelas
+const valor = document.getElementById('valor_total');
+const nparc = document.getElementById('num_parcelas');
+const resumo = document.getElementById('resumo-parcelas');
+
+function atualizarResumo() {
+    const v = parseFloat(valor.value) || 0;
+    const n = parseInt(nparc.value) || 1;
+    if (v > 0) {
+        const p = v / n;
+        resumo.textContent = `${n}x de R$ ${p.toFixed(2).replace('.', ',')} = R$ ${v.toFixed(2).replace('.', ',')}`;
+    } else {
+        resumo.textContent = 'Informe o valor total para ver o resumo.';
+    }
+}
+valor.addEventListener('input', atualizarResumo);
+nparc.addEventListener('input', atualizarResumo);
+atualizarResumo();
+</script>
+{% endblock %}

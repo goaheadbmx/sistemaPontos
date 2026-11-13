@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Extrato de Pontos - {{ cliente.nome }}</h1>
+<p>Saldo atual: <strong>{{ cliente.pontos }} pontos</strong></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Tipo</th>
+            <th>Pontos</th>
+            <th>Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in movimentacoes %}
+        <tr>
+            <td>{{ m.data.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ 'Crédito' if m.tipo == 'credito' else 'Débito' }}</td>
+            <td>{{ m.pontos }}</td>
+            <td>{{ m.descricao }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

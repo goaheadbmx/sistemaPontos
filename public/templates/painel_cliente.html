@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h1>Olá, {{ cliente.nome }}!</h1>
+            <p class="text-muted">ID: {{ cliente.id }}</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- QR Code -->
+        <div class="col-12 col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Meu QR Code</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ url_for('cliente_qrcode', cliente_id=cliente.id) }}" 
+                         alt="QR Code do cliente" 
+                         class="img-fluid" style="max-width: 250px;">
+                    <p class="mt-2 mb-0">Apresente este código na loja</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saldo de Pontos -->
+        <div class="col-12 col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Meus Pontos</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h2 class="display-4">{{ cliente.pontos }}</h2>
+                    <p class="mb-0">pontos acumulados</p>
+                    <a href="{{ url_for('extrato_pontos', cliente_id=cliente.id) }}" class="btn btn-outline-success mt-3">Ver extrato</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parcelas em aberto -->
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-warning">
+            <h5 class="mb-0">Valores a Pagar</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Venda</th>
+                            <th>Parcela</th>
+                            <th>Vencimento</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in parcelas_abertas %}
+                        <tr>
+                            <td>#{{ p.venda.id }}</td>
+                            <td>{{ p.numero }}/{{ p.venda.num_parcelas }}</td>
+                            <td>{{ p.vencimento.strftime('%d/%m/%Y') }}</td>
+                            <td>R$ {{ '%.2f'|format(p.valor) }}</td>
+                            <td><span class="badge bg-danger">Em aberto</span></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-3">Nenhuma parcela em aberto.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

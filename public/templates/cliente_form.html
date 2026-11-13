@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Novo Cliente</h1>
+<form method="POST" action="{{ url_for('novo_cliente') }}">
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome *</label>
+        <input type="text" class="form-control" id="nome" name="nome" required>
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email">
+    </div>
+    <div class="mb-3">
+        <label for="telefone" class="form-label">Telefone</label>
+        <input type="text" class="form-control" id="telefone" name="telefone">
+    </div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{{ url_for('clientes') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Clientes</h1>
+<a href="{{ url_for('novo_cliente') }}" class="btn btn-primary mb-3">Novo Cliente</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <th>Pontos</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in clientes %}
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.email or '-' }}</td>
+            <td>{{ c.telefone or '-' }}</td>
+            <td>{{ c.pontos }}</td>
+            <td>
+                <a href="{{ url_for('extrato_pontos', cliente_id=c.id) }}" class="btn btn-sm btn-info">Extrato</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="text-center">Nenhum cliente cadastrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

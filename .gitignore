@@ -1,0 +1,4 @@
+#ignorar pasta de ambiente virtual
+.venv/
+#ignorar pasta da base de dados
+instance/
